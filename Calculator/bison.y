@@ -40,8 +40,8 @@ line:	'\n'					{printf(">");}
 ;
 
 exp:	NUM						{$$ = $1;}
-		| IDENTIFIER			{$$=$1.valor;}
-		| CONSTANT 				{$$=$1.valor;}
+		| IDENTIFIER			{$$=$1.valor.var;}
+		| CONSTANT 				{$$=$1.valor.var;}
 		| IDENTIFIER '=' exp	{
 									entrada e = NUEVA_ENTRADA($1.lexema, VAR, $3);
 									$$ = $3;

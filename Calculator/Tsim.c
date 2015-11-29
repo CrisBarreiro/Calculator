@@ -35,9 +35,9 @@ entrada BUSCAR(char *lex) {
 	if (s != NULL) {
 		e.lexema = strdup(s->lexema);
 		e.tipo = s->tipo;
-		e.valor = s->valor;
+		e.valor.var = s->valor;
 	} else
-		e.valor = NAN;
+		e.valor.var = NAN;
 	return e;
 
 }
@@ -60,18 +60,18 @@ entrada NUEVA_ENTRADA(char *lexema, int tipo, double valor) {
 	e.lexema = strdup(lexema);
 	if (s == NULL) {
 		ANHADIR(lexema, tipo, valor);
-		e.valor = valor;
+		e.valor.var = valor;
 		e.tipo = tipo;
 		return e;
 	} else {
 		if (s->tipo == CONS || s->tipo == FUNC) {
-			e.valor = s->valor;
+			e.valor.var = s->valor;
 			e.tipo = s->tipo;
 			return e;
 		} else {
 			HASH_DEL(tabla, s);
 			ANHADIR(lexema, tipo, valor);
-			e.valor = s->valor;
+			e.valor.var = s->valor;
 			e.tipo = s->tipo;
 			return e;
 		}
