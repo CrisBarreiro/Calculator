@@ -44,7 +44,14 @@ ID		[_[:alpha:]][_[:alnum:]]*
 					yylval.eval.lexema=strdup(yytext);
 					yylval.eval.tipo = e.tipo;
 					yylval.eval.valor = e.valor;
-					return IDENTIFIER;
+					if (e.tipo == FUNC) {
+						return FUNCTION;
+					} else if (e.tipo == CONS) {
+						return CONSTANT;
+					} else {
+						return IDENTIFIER;
+					}
+					
 				}
 				
 \n	return yytext[0];

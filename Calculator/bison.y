@@ -20,6 +20,8 @@ void yyerror(const char *s);
 }
 %token <fval> NUM
 %token <eval> IDENTIFIER
+%token <eval> CONSTANT
+%token <eval> FUNCTION
 %left '='
 %left '-' '+'
 %left '*' '/'
@@ -38,20 +40,11 @@ line:	'\n'					{printf(">");}
 ;
 
 exp:	NUM						{$$ = $1;}
-		| IDENTIFIER			{	
-									$$=$1.valor;
-								}
+		| IDENTIFIER			{$$=$1.valor;}
+		| CONSTANT 				{$$=$1.valor;}
 		| IDENTIFIER '=' exp	{
 									entrada e = NUEVA_ENTRADA($1.lexema, VAR, $3);
-									if (e.tipo == CONS) {
-										yyerror("Constants cannot be overriden");
-										YYERROR;
-									} else if (e.tipo == FUNC) {
-										yyerror("Functions cannot be overriden");
-										YYERROR;
-									} else if (e.tipo == VAR) {
-										$$ = $3;
-									}
+									$$ = $3;
 									
 								}
 		| '(' exp ')'			{$$ = $2;}
