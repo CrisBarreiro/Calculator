@@ -8,18 +8,18 @@
 typedef union {
 	double var;
 	double (*func)();
-} union_val;
+} valorUnion;
 
 typedef struct {
 	char* lexema;
 	int tipo;
-	union_val valor;
+	valorUnion valor;
 } entrada;
 
 /*Inserta una entrada en la tabla de símbolos y
  * devuelve el tipo de componente
  */
-entrada NUEVA_ENTRADA(char *lexema, int tipo, double valor);
+entrada NUEVA_ENTRADA(entrada e);
 
 /*Crea la tabla de símbolos con las palabras reservadas del lenguaje*/
 void CREAR_TABLA();

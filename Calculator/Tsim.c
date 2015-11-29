@@ -13,7 +13,7 @@
 typedef struct {
 	char* lexema;
 	int tipo;
-	double valor;
+	valorUnion valor;
 	UT_hash_handle hh;
 } entry;
 
@@ -35,43 +35,44 @@ entrada BUSCAR(char *lex) {
 	if (s != NULL) {
 		e.lexema = strdup(s->lexema);
 		e.tipo = s->tipo;
-		e.valor.var = s->valor;
+		e.valor.var = s->valor.var;
 	} else
 		e.valor.var = NAN;
 	return e;
 
 }
 /*Función privada de manejo de la tabla que añade un componente a la misma*/
-void ANHADIR(char *lexema, int tipo, double valor) {
+void ANHADIR(entrada e) {
 	entry *s = NULL;
 	s = (entry*) malloc(sizeof(entry));
-	s->lexema = strdup(lexema);
-	s->tipo = tipo;
-	s->valor = valor;
+	s->lexema = strdup(e.lexema);
+	s->tipo = e.tipo;
+	if (e.tipo == VAR) {
+		s->valor.var = e.valor.var;
+	} else if (e.tipo == FUNC) {
+		s->valor.func = e.valor.func;
+	}
+
 	HASH_ADD_KEYPTR(hh, tabla, s->lexema, strlen(s->lexema), s);
 }
 
 /*Función que añade una nueva entrada a la tabla*/
-entrada NUEVA_ENTRADA(char *lexema, int tipo, double valor) {
+entrada NUEVA_ENTRADA(entrada e) {
 	/*Antes de realizar la inserción, se busca en la tabla para saber si
 	 el lexema a insertar ya forma parte de la tabla*/
-	entrada e;
-	entry *s = BUSCAR_ENTRADA(lexema);
-	e.lexema = strdup(lexema);
+	entry *s = BUSCAR_ENTRADA(e.lexema);
 	if (s == NULL) {
-		ANHADIR(lexema, tipo, valor);
-		e.valor.var = valor;
-		e.tipo = tipo;
+		ANHADIR(e);
 		return e;
 	} else {
 		if (s->tipo == CONS || s->tipo == FUNC) {
-			e.valor.var = s->valor;
+			e.valor = s->valor;
 			e.tipo = s->tipo;
 			return e;
 		} else {
 			HASH_DEL(tabla, s);
-			ANHADIR(lexema, tipo, valor);
-			e.valor.var = s->valor;
+			ANHADIR(e);
+			e.valor = s->valor;
 			e.tipo = s->tipo;
 			return e;
 		}
@@ -88,7 +89,7 @@ void IMPRIMIR() {
 
 	HASH_ITER(hh, tabla, s, tmp)
 	{
-		printf("\n%10d\t%-20s%-20f", i, s->lexema, s->valor);
+		printf("\n%10d\t%-20s%-20f", i, s->lexema, s->valor.var);
 		i++;
 	}
 }
@@ -96,6 +97,30 @@ void IMPRIMIR() {
 /*Función que inicializa la tabla de símbolos con las palabras reservadas del
  lenguaje*/
 void CREAR_TABLA() {
-	ANHADIR("pi", CONS, M_PI);
-	ANHADIR("e", CONS, M_E);
+
+	entrada e;
+
+	e.lexema = "pi";
+	e.tipo = CONS;
+	e.valor.var = M_PI;
+
+	ANHADIR(e);
+
+	e.lexema = "e";
+	e.tipo = CONS;
+	e.valor.var = M_E;
+
+	ANHADIR(e);
+
+	e.lexema = "cos";
+	e.tipo = FUNC;
+	e. valor.func = cos;
+
+	ANHADIR(e);
+
+	e.lexema = "sqrt";
+	e.tipo = FUNC;
+	e.valor.func = sqrt;
+
+	ANHADIR(e);
 }

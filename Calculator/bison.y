@@ -43,8 +43,21 @@ exp:	NUM						{$$ = $1;}
 		| IDENTIFIER			{$$=$1.valor.var;}
 		| CONSTANT 				{$$=$1.valor.var;}
 		| IDENTIFIER '=' exp	{
-									entrada e = NUEVA_ENTRADA($1.lexema, VAR, $3);
+									entrada e;
+									e.lexema = $1.lexema;
+									e.tipo = VAR;
+									e.valor.var = $3;
+									NUEVA_ENTRADA(e);
 									$$ = $3;
+									
+								}
+		| FUNCTION '(' exp ')'		{
+									if ($3 >= 0) {
+										$$ = $1.valor.func($3);
+									} else {
+										yyerror("syntax error, unexpected negative number");
+										YYERROR;
+									}	
 									
 								}
 		| '(' exp ')'			{$$ = $2;}
@@ -61,6 +74,7 @@ exp:	NUM						{$$ = $1;}
 
 int main() {
     CREAR_TABLA();
+    printf(">");
 	yyparse();
 	
 	return(EXIT_SUCCESS);
