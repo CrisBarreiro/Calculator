@@ -42,6 +42,7 @@ ID		[_[:alpha:]][_[:alnum:]]*
 {ID} 			{
 					entrada e = BUSCAR(yytext);
 					yylval.eval.lexema=strdup(yytext);
+					yylval.eval.tipo = e.tipo;
 					yylval.eval.valor = e.valor;
 					return IDENTIFIER;
 				}

@@ -42,8 +42,17 @@ exp:	NUM						{$$ = $1;}
 									$$=$1.valor;
 								}
 		| IDENTIFIER '=' exp	{
-									$$=$3;
-									NUEVA_ENTRADA($1.lexema, $3);
+									entrada e = NUEVA_ENTRADA($1.lexema, VAR, $3);
+									if (e.tipo == CONS) {
+										yyerror("Constants cannot be overriden");
+										YYERROR;
+									} else if (e.tipo == FUNC) {
+										yyerror("Functions cannot be overriden");
+										YYERROR;
+									} else if (e.tipo == VAR) {
+										$$ = $3;
+									}
+									
 								}
 		| '(' exp ')'			{$$ = $2;}
 		| exp '+' exp			{$$ = $1 + $3;}

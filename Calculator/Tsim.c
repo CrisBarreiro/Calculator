@@ -12,6 +12,7 @@
 /*Estructura que define cada entrada de la tabla*/
 typedef struct {
 	char* lexema;
+	int tipo;
 	double valor;
 	UT_hash_handle hh;
 } entry;
@@ -27,13 +28,13 @@ entry * BUSCAR_ENTRADA(char *lex) {
 	return s;
 }
 
-
 entrada BUSCAR(char *lex) {
 	entry *s = NULL;
 	s = BUSCAR_ENTRADA(lex);
 	entrada e;
 	if (s != NULL) {
 		e.lexema = strdup(s->lexema);
+		e.tipo = s->tipo;
 		e.valor = s->valor;
 	} else
 		e.valor = NAN;
@@ -41,28 +42,39 @@ entrada BUSCAR(char *lex) {
 
 }
 /*Función privada de manejo de la tabla que añade un componente a la misma*/
-void ANHADIR(char *lexema, double valor) {
+void ANHADIR(char *lexema, int tipo, double valor) {
 	entry *s = NULL;
 	s = (entry*) malloc(sizeof(entry));
-	s->lexema = (char*) malloc((strlen(lexema) + 1) * sizeof(char));
-	strcpy(s->lexema, lexema);
+	s->lexema = strdup(lexema);
+	s->tipo = tipo;
 	s->valor = valor;
 	HASH_ADD_KEYPTR(hh, tabla, s->lexema, strlen(s->lexema), s);
 }
 
 /*Función que añade una nueva entrada a la tabla*/
-double NUEVA_ENTRADA(char *lexema, double valor) {
+entrada NUEVA_ENTRADA(char *lexema, int tipo, double valor) {
 	/*Antes de realizar la inserción, se busca en la tabla para saber si
 	 el lexema a insertar ya forma parte de la tabla*/
-
+	entrada e;
 	entry *s = BUSCAR_ENTRADA(lexema);
+	e.lexema = strdup(lexema);
 	if (s == NULL) {
-		ANHADIR(lexema, valor);
-		return valor;
+		ANHADIR(lexema, tipo, valor);
+		e.valor = valor;
+		e.tipo = tipo;
+		return e;
 	} else {
-		HASH_DEL(tabla, s);
-		ANHADIR(lexema, valor);
-		return valor;
+		if (s->tipo == CONS || s->tipo == FUNC) {
+			e.valor = s->valor;
+			e.tipo = s->tipo;
+			return e;
+		} else {
+			HASH_DEL(tabla, s);
+			ANHADIR(lexema, tipo, valor);
+			e.valor = s->valor;
+			e.tipo = s->tipo;
+			return e;
+		}
 	}
 }
 
@@ -84,6 +96,6 @@ void IMPRIMIR() {
 /*Función que inicializa la tabla de símbolos con las palabras reservadas del
  lenguaje*/
 void CREAR_TABLA() {
-	ANHADIR("pi", M_PI);
-	ANHADIR("e", M_E);
+	ANHADIR("pi", CONS, M_PI);
+	ANHADIR("e", CONS, M_E);
 }
