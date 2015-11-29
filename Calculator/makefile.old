@@ -1,0 +1,43 @@
+#########################
+LIBDIR := lib
+OUTDIR := out
+
+CFILES := $(wildcard $(LIBDIR)/*.c) $(wildcard *.c)
+PROG := calculator
+
+CFLAGS := -g -MMD
+LDFLAGS :=
+
+CC := gcc
+LEX := flex
+
+OBJFILES := $(CFILES:.c=.o)
+DEPFILES := $(CFILES:.c=.d)
+
+.PHONY: all
+all: $(PROG)
+
+$(PROG) : flex.o bison.tab.o $(OBJFILES)
+		echo $(CFILES)
+		$(LINK.o) $(LDFLAGS) -lm -o $@ $^
+	
+flex.o: flex.c bison.tab.o
+		$(CC) -c flex.c -o flex.o
+
+flex.c flex.h:
+		flex --header-file=flex.h --outfile=flex.c flex.l
+
+		
+bison.tab.o: bison.tab.c
+		$(CC) -c bison.tab.c -o bison.tab.o
+
+bison.tab.c bison.tab.h:
+		bison --defines=bison.tab.h --output=bison.tab.c bison.y
+		
+
+.PHONY: clean		
+clean :
+		rm -fv $(PROG) $(OBJFILES) $(DEPFILES) flex.l flex.h bison.tab.c bison.tab.h
+
+-include $(DEPFILES)
+

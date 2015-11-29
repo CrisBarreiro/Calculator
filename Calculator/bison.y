@@ -2,57 +2,68 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include "Tsim.h"
 
 extern int yylex();
 extern int yyparse();
 extern FILE *yyin;
 	
-void yyerror(char *s);
+void yyerror(const char *s);
 	 
 %}
 
+%define parse.error verbose
+
 %union {
-	float fval;
-	char *sval;
+	double fval;
+	entrada eval;
 }
 %token <fval> NUM
-%token <sval> IDENTIFIER
-%type <fval> exp
-%type <sval> declaration
+%token <eval> IDENTIFIER
+%left '='
 %left '-' '+'
 %left '*' '/'
 %left NEG /*menos unario*/
 %right '^'
+%type <fval> exp
 
 %%
 input:	/*vacío*/
 		| input line
 ;
 
-line:	'\n'			{printf(">");}
-		| exp '\n' 		{printf("\t%f\n>", $1);}
+line:	'\n'					{printf(">");}
+		| exp '\n' 				{printf("\t%f\n>", $1);}
+		| error '\n'				{yyerrok; printf(">");}  
 ;
 
-exp:	NUM				{$$ = $1;}
-		| exp '+' exp	{$$ = $1 + $3;}
-		| exp '-' exp	{$$ = $1 - $3;}
-		| exp '*' exp	{$$ = $1 * $3;}
-		| exp '/' exp	{$$ = $1 / $3;}
-		| '-' exp		{$$ = -$2;}
-		| exp '^' exp	{$$ = pow ($1, $3);}
-		| '(' exp ')'	{$$ = $2;}
+exp:	NUM						{$$ = $1;}
+		| IDENTIFIER			{	
+									$$=$1.valor;
+								}
+		| IDENTIFIER '=' exp	{
+									$$=$3;
+									NUEVA_ENTRADA($1.lexema, $3);
+								}
+		| '(' exp ')'			{$$ = $2;}
+		| exp '+' exp			{$$ = $1 + $3;}
+		| exp '-' exp			{$$ = $1 - $3;}
+		| exp '*' exp			{$$ = $1 * $3;}
+		| exp '/' exp			{$$ = $1 / $3;}
+		| '-' exp %prec NEG		{$$ = -$2;}
+		| exp '^' exp			{$$ = pow ($1, $3);}
+		
 ;
 
-declaration: IDENTIFIER '=' NUM {$$ = $3;}
-;
 %%
 
 int main() {
+    CREAR_TABLA();
 	yyparse();
 	
 	return(EXIT_SUCCESS);
 }
 
- void yyerror (char *s) {
+ void yyerror (const char *s) {
    fprintf (stderr, "%s\n", s);
  }
