@@ -35,14 +35,22 @@ input:	/*vacío*/
 ;
 
 line:	'\n'					{printf(">");}
-		| exp '\n' 				{printf("\t%f\n>", $1);}
-		| error '\n'				{yyerrok; printf(">");}  
+		| exp '\n' 				{
+									/*Una línea que no termine en ';', se imprime*/
+									printf("\t%f\n>", $1);}
+		| exp ';' '\n'			{
+									/*Una línea seguida terminada en ';' implica que el resultado no se imprima*/
+									printf("\n>");
+		
+								}
+		| error '\n'			{yyerrok; printf(">");}  
 ;
 
 exp:	NUM						{$$ = $1;}
 		| IDENTIFIER			{$$=$1.valor.var;}
 		| CONSTANT 				{$$=$1.valor.var;}
 		| IDENTIFIER '=' exp	{
+									/*Al asignar una variable, se añade a la tabla de símbolos*/
 									entrada e;
 									e.lexema = $1.lexema;
 									e.tipo = VAR;
@@ -52,13 +60,13 @@ exp:	NUM						{$$ = $1;}
 									
 								}
 		| FUNCTION '(' exp ')'		{
-									if ($3 >= 0) {
-										$$ = $1.valor.func($3);
-									} else {
+		
+									if (strcmp($1.lexema, "sqrt") == 0 && $3 < 0) {
 										yyerror("syntax error, unexpected negative number");
 										YYERROR;
-									}	
-									
+									} else {
+										$$ = $1.valor.func($3);
+									}
 								}
 		| '(' exp ')'			{$$ = $2;}
 		| exp '+' exp			{$$ = $1 + $3;}
@@ -72,14 +80,26 @@ exp:	NUM						{$$ = $1;}
 
 %%
 
-int main() {
+int main(int argc, char **argv) {
     CREAR_TABLA();
     printf(">");
+    if (argc == 2) {
+    	FILE *fp = fopen(argv[1], "rt");
+    	if (fp == NULL) {
+    		fprintf(stderr, "File not found");
+    	} else {
+    		printf("Loading file %s", argv[1]);
+    		yyset_in(fp);
+    	}
+    	
+    } else {
+    	printf("Starting program in command-line mode\n");
+    }
 	yyparse();
 	
 	return(EXIT_SUCCESS);
 }
 
  void yyerror (const char *s) {
-   fprintf (stderr, "%s\n", s);
+   printf ("ERROR: %s\n", s);
  }

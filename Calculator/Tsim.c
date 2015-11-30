@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
+#include "bison.tab.h"
 #include "uthash.h"
 
 /*Estructura que define cada entrada de la tabla*/
@@ -36,8 +36,13 @@ entrada BUSCAR(char *lex) {
 		e.lexema = strdup(s->lexema);
 		e.tipo = s->tipo;
 		e.valor.var = s->valor.var;
-	} else
+	} else {
+		/*Si el lexema no se encuentra ya en la tabla de símboos
+		 * sólo puede ser un identificador*/
+		e.lexema = lex;
+		e.tipo = IDENTIFIER;
 		e.valor.var = NAN;
+	}
 	return e;
 
 }

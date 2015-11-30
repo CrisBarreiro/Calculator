@@ -1,5 +1,4 @@
 %option noyywrap
-
 %{
 /*Biblotecas y variables*/
 #include <stdio.h>
@@ -18,7 +17,7 @@ ID		[_[:alpha:]][_[:alnum:]]*
 
 %%
 
-{SYM} 	return yytext[0]; //s
+{SYM} 	return yytext[0]; 
 {DIGITO}+{EXP}	{
 					yylval.fval=atof(yytext);
 					return NUM;
@@ -49,11 +48,12 @@ ID		[_[:alpha:]][_[:alnum:]]*
 					} else if (e.tipo == CONS) {
 						return CONSTANT;
 					} else {
+						yylval.eval.tipo=IDENTIFIER;
 						return IDENTIFIER;
 					}
 					
 				}
 				
-\n	return yytext[0];
+\n	return '\n';
 
 <<EOF>>	return EOF;
