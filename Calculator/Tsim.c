@@ -47,7 +47,7 @@ void ANHADIR(entrada e) {
 	s = (entry*) malloc(sizeof(entry));
 	s->lexema = strdup(e.lexema);
 	s->tipo = e.tipo;
-	if (e.tipo == VAR) {
+	if (e.tipo == VAR || e.tipo == CONS) {
 		s->valor.var = e.valor.var;
 	} else if (e.tipo == FUNC) {
 		s->valor.func = e.valor.func;
@@ -114,7 +114,7 @@ void CREAR_TABLA() {
 
 	e.lexema = "cos";
 	e.tipo = FUNC;
-	e. valor.func = cos;
+	e.valor.func = cos;
 
 	ANHADIR(e);
 
@@ -122,5 +122,35 @@ void CREAR_TABLA() {
 	e.tipo = FUNC;
 	e.valor.func = sqrt;
 
+	ANHADIR(e);
+
+	e.lexema = "sin";
+	e.tipo = FUNC;
+	e.valor.func = sin;
+	ANHADIR(e);
+
+	e.lexema = "tan";
+	e.tipo = FUNC;
+	e.valor.func = tan;
+	ANHADIR(e);
+
+	e.lexema = "atan";
+	e.tipo = FUNC;
+	e.valor.func = atan;
+	ANHADIR(e);
+
+	e.lexema = "log";
+	e.tipo = FUNC;
+	e.valor.func = log;
+	ANHADIR(e);
+
+	e.lexema = "log10";
+	e.tipo = FUNC;
+	e.valor.func = log10;
+	ANHADIR(e);
+
+	e.lexema = "exp";
+	e.tipo = FUNC;
+	e.valor.func = exp;
 	ANHADIR(e);
 }
