@@ -94,63 +94,59 @@ void IMPRIMIR() {
 	}
 }
 
+void CREAR_ESTRUCTURA_VAR(char *lexema, int tipo, double valor) {
+	entrada e;
+	e.lexema = strdup(lexema);
+	e.tipo = tipo;
+	e.valor.var = valor;
+	ANHADIR(e);
+}
+
+void CREAR_ESTRUCTURA_FUNC(char *lexema, double (*func)()) {
+	entrada e;
+	e.lexema = strdup(lexema);
+	e.tipo = FUNC;
+	e.valor.func = func;
+	ANHADIR(e);
+}
+
 /*Función que inicializa la tabla de símbolos con las palabras reservadas del
  lenguaje*/
 void CREAR_TABLA() {
 
-	entrada e;
+	CREAR_ESTRUCTURA_VAR("pi", CONS, M_PI);
 
-	e.lexema = "pi";
-	e.tipo = CONS;
-	e.valor.var = M_PI;
+	CREAR_ESTRUCTURA_VAR("e", CONS, M_E);
 
-	ANHADIR(e);
+	CREAR_ESTRUCTURA_FUNC("sqrt", sqrt);
 
-	e.lexema = "e";
-	e.tipo = CONS;
-	e.valor.var = M_E;
+	CREAR_ESTRUCTURA_FUNC("sin", sin);
 
-	ANHADIR(e);
+	CREAR_ESTRUCTURA_FUNC("cos", cos);
 
-	e.lexema = "cos";
-	e.tipo = FUNC;
-	e.valor.func = cos;
+	CREAR_ESTRUCTURA_FUNC("tan", tan);
 
-	ANHADIR(e);
+	CREAR_ESTRUCTURA_FUNC("asin", asin);
 
-	e.lexema = "sqrt";
-	e.tipo = FUNC;
-	e.valor.func = sqrt;
+	CREAR_ESTRUCTURA_FUNC("acos", acos);
 
-	ANHADIR(e);
+	CREAR_ESTRUCTURA_FUNC("atan", atan);
 
-	e.lexema = "sin";
-	e.tipo = FUNC;
-	e.valor.func = sin;
-	ANHADIR(e);
+	CREAR_ESTRUCTURA_FUNC("sinh", sinh);
 
-	e.lexema = "tan";
-	e.tipo = FUNC;
-	e.valor.func = tan;
-	ANHADIR(e);
+	CREAR_ESTRUCTURA_FUNC("cosh", cosh);
 
-	e.lexema = "atan";
-	e.tipo = FUNC;
-	e.valor.func = atan;
-	ANHADIR(e);
+	CREAR_ESTRUCTURA_FUNC("tanh", tanh);
 
-	e.lexema = "log";
-	e.tipo = FUNC;
-	e.valor.func = log;
-	ANHADIR(e);
+	CREAR_ESTRUCTURA_FUNC("ceil", ceil);
 
-	e.lexema = "log10";
-	e.tipo = FUNC;
-	e.valor.func = log10;
-	ANHADIR(e);
+	CREAR_ESTRUCTURA_FUNC("fabs", fabs);
 
-	e.lexema = "exp";
-	e.tipo = FUNC;
-	e.valor.func = exp;
-	ANHADIR(e);
+	CREAR_ESTRUCTURA_FUNC("floor", floor);
+
+	CREAR_ESTRUCTURA_FUNC("log", log);
+
+	CREAR_ESTRUCTURA_FUNC("log10", log10);
+
+	CREAR_ESTRUCTURA_FUNC("exp", exp);
 }
