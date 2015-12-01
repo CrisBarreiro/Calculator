@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "Tsim.h"
+#include "help.h"
 
 extern int yylex();
 extern int yyparse();
@@ -67,7 +68,15 @@ line:	'\n'					{printf(">");}
 		/* - Un número*/
 exp:	NUM						{$$ = $1;}
 		/* - Un identificador*/
-		| IDENTIFIER			{$$=$1.valor.var;}
+		| IDENTIFIER			{	
+									if (!isnan($1.valor.var)) {
+										$$=$1.valor.var;
+									} else {
+										yyerror("syntax error, varible not initialized");
+										YYERROR;
+									}
+									
+								}
 		/* - Una constante*/
 		| CONSTANT 				{$$=$1.valor.var;}
 		/* - Un identificador igualado a una expresión*/
@@ -112,15 +121,27 @@ int main(int argc, char **argv) {
 	/*Se crea la tabla*/
     CREAR_TABLA();
     if (argc == 2) {
-    	FILE *fp = fopen(argv[1], "rt");
-    	if (fp == NULL) {
-    		fprintf(stderr, "File not found");
+    	if (strcmp(argv[1], "-h") == 0) {
+    		printf("--------------------Calculadora v0.1--------------------\n");
+    		HELP();
+    		exit(0);
+    	} else if (strcmp(argv[1], "--help") == 0){
+    		printf("--------------------Calculadora v0.1--------------------\n");
+    		COMPLETE_HELP();
+    		exit(0);
     	} else {
-    		printf("Loading file %s", argv[1]);
-    		/*Se establece el archivo indicado por línea de comandos como
-    		* entrada del programa*/
-    		yyset_in(fp);
+    		FILE *fp = fopen(argv[1], "rt");
+    		if (fp == NULL) {
+    			fprintf(stderr, "File not found");
+    		} else {
+    			printf("Loading file %s", argv[1]);
+    			/*Se establece el archivo indicado por línea de comandos como
+    			* entrada del programa*/
+    			yyset_in(fp);
+    		}
     	}
+    
+    	
     	
     } else {
     	/*Ejecución del programa en modo interactivo*/
