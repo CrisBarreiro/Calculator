@@ -25,7 +25,13 @@ void yyerror(const char *s);
 %token <fval> NUM
 %token <eval> IDENTIFIER
 %token <eval> CONSTANT
+
+/*Comandos especiales*/
 %token <fval> EXIT
+%token <fval> VARIABLES
+%token <fval> CONSTANTS
+%token <fval> FUNCTIONS
+%token <fval> USERHELP
 
 /*Símbolos terminales de la gramática*/
 %token <eval> FUNCTION
@@ -61,6 +67,22 @@ line:	'\n'					{printf(">");}
 								}  
 		| EXIT '\n'				{
 									exit(0);
+								}
+		| VARIABLES '\n'		{
+									IMPRIMIR_VARIABLES();
+									printf("\n>");
+								}
+		| CONSTANTS '\n'		{
+									IMPRIMIR_CONSTANTES();
+									printf("\n>");
+								}
+		| FUNCTIONS '\n'		{
+									IMPRIMIR_FUNCIONES();
+									printf("\n>");
+								}
+		| USERHELP '\n'				{
+									COMPLETE_HELP();
+									printf("\n>");
 								}
 ;
 

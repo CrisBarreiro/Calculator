@@ -85,18 +85,52 @@ entrada NUEVA_ENTRADA(entrada e) {
 }
 
 /*Función que imprime el contenido de la tabla de símbolos*/
-void IMPRIMIR() {
+void IMPRIMIR_VARIABLES() {
 	entry *s, *tmp;
 	int i = 0;
-	printf("--------------------Tabla de símbolos--------------------\n");
+	printf("--------------------VARIABLES--------------------\n");
 	printf("%-8s\t%-20s%-20s\n", "Indice", "Lexema", "Valor");
-	printf("---------------------------------------------------------\n");
+	printf("-------------------------------------------------\n");
 
 	HASH_ITER(hh, tabla, s, tmp)
 	{
-		printf("\n%10d\t%-20s%-20f", i, s->lexema, s->valor.var);
-		i++;
+		if (s->tipo == VAR) {
+			printf("\n%10d\t%-20s%-20f", i, s->lexema, s->valor.var);
+					i++;
+		}
 	}
+}
+
+void IMPRIMIR_CONSTANTES() {
+	entry *s, *tmp;
+	int i = 0;
+	printf("--------------------CONSTANTS--------------------\n");
+	printf("%-8s\t%-20s%-20s\n", "Indice", "Lexema", "Valor");
+	printf("-------------------------------------------------\n");
+
+	HASH_ITER(hh, tabla, s, tmp)
+	{
+		if (s->tipo == CONS) {
+			printf("\n%10d\t%-20s%-20f", i, s->lexema, s->valor.var);
+					i++;
+		}
+	}
+}
+
+void IMPRIMIR_FUNCIONES() {
+	entry *s, *tmp;
+		int i = 0;
+		printf("--------------------CONSTANTS--------------------\n");
+		printf("%-8s\t%-20s\n", "Indice", "Lexema");
+		printf("-------------------------------------------------\n");
+
+		HASH_ITER(hh, tabla, s, tmp)
+		{
+			if (s->tipo == FUNC) {
+				printf("\n%10d\t%-20s", i, s->lexema);
+						i++;
+			}
+		}
 }
 
 void CREAR_ESTRUCTURA_VAR(char *lexema, int tipo, double valor) {

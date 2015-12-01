@@ -40,7 +40,17 @@ ID		[_[:alpha:]][_[:alnum:]]*
 				}
 				
 {ID} 			{
-					if (strcmp(strdup(yytext), "exit") != 0) {
+					if (strcmp(strdup(yytext), "exit") == 0) {
+						return EXIT;
+					} else if (strcmp(strdup(yytext), "variables") == 0) {
+						return VARIABLES;
+					} else if (strcmp(strdup(yytext), "functions") == 0) {
+						return FUNCTIONS;
+					} else if (strcmp(strdup(yytext), "constants") == 0) {
+						return CONSTANTS;
+					} else if (strcmp(strdup(yytext), "help") == 0) {
+						return USERHELP;
+					} else {
 						entrada e = BUSCAR(yytext);
 						yylval.eval.lexema=strdup(yytext);
 						yylval.eval.tipo = e.tipo;
@@ -53,8 +63,6 @@ ID		[_[:alpha:]][_[:alnum:]]*
 							yylval.eval.tipo=IDENTIFIER;
 							return IDENTIFIER;
 						}
-					} else {
-						return EXIT;
 					}
 					
 					
