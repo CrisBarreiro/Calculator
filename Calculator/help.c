@@ -68,4 +68,45 @@ void COMPLETE_HELP() {
 	printf("\tUna función aplicada sobre un número o variable\n");
 	printf("\n");
 
+	printf("USO DE CONSTANTES\n");
+	printf("\n");
+	printf("El programa permite el uso de constantes matemáticas predefinidas. Las constantes disponibles son:\n");
+	printf("\te: \tNúmero de Euler.\t2.71828\n");
+	printf("\tpi:\tNúmero Pi.\t\t3.14159\n");
+	printf("El valor de una constante puede ser impreso, o usarse en expresiones matemáticas. En este último caso, sólo pueden usarse después del signo igual ('=') de la expresión, ya que su valor no puede ser sobreescrito. Ejemplo: a = 2 * pi\n");
+	printf("\n");
+
+	printf("FUNCIONES\n");
+	printf("\n");
+	printf("El programa incluye por defecto varias funciones pertenecientes a la librería 'math.h' del lenguaje C. Las funciones disponibles son las siguientes:\n");
+	printf("\tsqrt\traíz cuadrada\n");
+	printf("\tsin\tseno\n");
+	printf("\tcos\tcoseno\n");
+	printf("\ttan\ttangente\n");
+	printf("\tasin\tarco seno\n");
+	printf("\tacos\tarco coseno\n");
+	printf("\tatan\tarco tangente\n");
+	printf("\tsinh\tseno hiperbólico\n");
+	printf("\tcosh\tcoseno hiperbólico\n");
+	printf("\ttanh\ttangente hiperbólica\n");
+	printf("\tceil\tredondea al siguiente entero\n");
+	printf("\tfloor\ttrunca el parámetro recibido\n");
+	printf("\tfabs\tvalor absoluto\n");
+	printf("\tlog\tlogaritmo neperiano\n");
+	printf("\tlog10\tlogaritmo en base 10\n");
+	printf("\texp\tfunción exponencial\n");
+	printf("\n");
+	printf("Todas las funciones reciben un único parámetro, que puede ser un número, una variable, una constante, o una operación aritmética. Los parámetros deben ser pasados entre paréntesis '(' ')'. Ejemplo: sin (pi/2)\n");
+	printf("\n");
+
+	printf("COMANDOS ESPECIALES\n");
+	printf("\n");
+	printf("El programa dispone de una serie de comandos especiales que pueden ser ejecutados por los usuarios:\n");
+	printf("\thelp\t\tmuestra el manual de usuario\n");
+	printf("\texit\t\tfinaliza el programa\n");
+	printf("\tvariables\timprime la lista de variables definidas\n");
+	printf("\tconstants\timprime la lista de constantes predeterminadas\n");
+	printf("\tfunctions\timprime la lista de funciones disponibles\n");
+	printf("\n");
+
 }
