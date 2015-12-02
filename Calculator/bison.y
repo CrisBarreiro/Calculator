@@ -117,7 +117,7 @@ exp:	NUM						{$$ = $1;}
 									/*Si se intenta hacer la raí cuadrada de un número negativo
 									* se lanza un error*/
 									if (strcmp($1.lexema, "sqrt") == 0 && $3 < 0) {
-										yyerror("syntax error, unexpected negative number");
+										yyerror("error, unexpected negative number");
 										YYERROR;
 									} else {
 										$$ = $1.valor.func($3);
@@ -129,7 +129,14 @@ exp:	NUM						{$$ = $1;}
 		| exp '+' exp			{$$ = $1 + $3;}
 		| exp '-' exp			{$$ = $1 - $3;}
 		| exp '*' exp			{$$ = $1 * $3;}
-		| exp '/' exp			{$$ = $1 / $3;}
+		| exp '/' exp			{
+									if ($3 == 0) {
+										yyerror("error, unexpected zero");
+										YYERROR;
+									} else {
+										$$ = $1 / $3;
+									}
+								}
 		/* - El puesto de una expresión*/
 		| '-' exp %prec NEG		{$$ = -$2;}
 		/* - Una expresión elevada a otra expresión*/
