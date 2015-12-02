@@ -175,7 +175,7 @@ int main(int argc, char **argv) {
     } else {
     	/*Ejecución del programa en modo interactivo*/
     	printf("Starting program in command-line mode\n");
-    	printf("\"help\" command opens user manual\n");
+    	printf("\"help\" command opens user manual. "exit" command finishes the program\n");
     	printf(">");
     }
 	yyparse();
